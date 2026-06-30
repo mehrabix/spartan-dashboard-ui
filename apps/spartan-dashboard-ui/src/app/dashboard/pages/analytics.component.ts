@@ -1,19 +1,40 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription } from '@spartan-ng/helm/card';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
 
 @Component({
   selector: 'app-analytics',
+  imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmSeparator],
   template: `
-    <div class="page">
-      <h1 class="page-title">Analytics</h1>
-      <div class="chart-grid">
+    <div class="p-6 space-y-6">
+      <h1 class="text-2xl font-bold tracking-tight">Analytics</h1>
+
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        @for (m of metrics; track m.label) {
+          <div hlmCard class="p-4 text-center">
+            <div hlmCardHeader class="p-0">
+              <p hlmCardDescription>{{ m.label }}</p>
+              <h3 hlmCardTitle class="text-2xl">{{ m.value }}</h3>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         @for (chart of charts; track chart.title) {
-          <div class="card">
-            <h3>{{ chart.title }}</h3>
-            <div class="chart-placeholder">
-              <div class="bar-chart">
+          <div hlmCard>
+            <div hlmCardHeader>
+              <h3 hlmCardTitle>{{ chart.title }}</h3>
+            </div>
+            <hr hlmSeparator />
+            <div hlmCardContent class="p-4">
+              <div class="flex items-end gap-2 h-32">
                 @for (bar of chart.data; track $index) {
-                  <div class="bar-wrapper">
-                    <div class="bar" [style.height.%]="bar"></div>
+                  <div class="flex-1 flex flex-col items-center gap-1">
+                    <div
+                      class="w-full bg-primary rounded-t-sm transition-all"
+                      [style.height.%]="bar"
+                    ></div>
                   </div>
                 }
               </div>
@@ -21,35 +42,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
           </div>
         }
       </div>
-      <div class="card metrics">
-        <h3>Key Metrics</h3>
-        <div class="metrics-grid">
-          @for (m of metrics; track m.label) {
-            <div class="metric">
-              <span class="metric-value">{{ m.value }}</span>
-              <span class="metric-label">{{ m.label }}</span>
-            </div>
-          }
-        </div>
-      </div>
     </div>
   `,
-  styles: [`
-    .page { padding: 24px; }
-    .page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; }
-    .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
-    .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
-    .chart-placeholder { height: 180px; display: flex; align-items: flex-end; }
-    .bar-chart { display: flex; align-items: flex-end; gap: 8px; width: 100%; height: 100%; padding-top: 20px; }
-    .bar-wrapper { flex: 1; display: flex; align-items: flex-end; height: 100%; }
-    .bar { width: 100%; background: linear-gradient(to top, #3b82f6, #60a5fa); border-radius: 4px 4px 0 0; min-height: 4px; transition: height 0.3s; }
-    .metrics { margin-top: 0; }
-    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    .metric { text-align: center; }
-    .metric-value { display: block; font-size: 1.5rem; font-weight: 700; }
-    .metric-label { font-size: 0.8rem; color: #64748b; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnalyticsComponent {

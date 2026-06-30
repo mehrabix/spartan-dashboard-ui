@@ -1,61 +1,64 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription } from '@spartan-ng/helm/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
 
 @Component({
   selector: 'app-dashboard-home',
+  imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmButton, HlmSeparator],
   template: `
-    <div class="page">
-      <h1 class="page-title">Dashboard Overview</h1>
-      <div class="stats-grid">
+    <div class="p-6 space-y-6">
+      <h1 class="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         @for (stat of stats; track stat.label) {
-          <div class="stat-card">
-            <span class="stat-value">{{ stat.value }}</span>
-            <span class="stat-label">{{ stat.label }}</span>
-            <span class="stat-trend" [class.up]="stat.up" [class.down]="!stat.up">
-              {{ stat.trend }}
-            </span>
+          <div hlmCard class="p-4">
+            <div hlmCardHeader class="p-0">
+              <p hlmCardDescription>{{ stat.label }}</p>
+              <h3 hlmCardTitle class="text-2xl">{{ stat.value }}</h3>
+            </div>
+            <div hlmCardContent class="p-0 pt-1">
+              <span [class.text-green-600]="stat.up" [class.text-red-600]="!stat.up" class="text-sm font-medium">
+                {{ stat.trend }}
+              </span>
+            </div>
           </div>
         }
       </div>
-      <div class="page-grid">
-        <div class="card">
-          <h2>Recent Activity</h2>
-          @for (item of activities; track item) {
-            <div class="activity-row">
-              <span>{{ item.action }}</span>
-              <span class="muted">{{ item.time }}</span>
-            </div>
-          }
-        </div>
-        <div class="card">
-          <h2>Quick Actions</h2>
-          <div class="actions-grid">
-            @for (action of quickActions; track action) {
-              <button class="action-btn">{{ action }}</button>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div hlmCard>
+          <div hlmCardHeader>
+            <h3 hlmCardTitle>Recent Activity</h3>
+          </div>
+          <hr hlmSeparator />
+          <div hlmCardContent class="p-0">
+            @for (item of activities; track item; let last = $last) {
+              <div class="flex justify-between items-center px-6 py-3 text-sm" [class.border-b]="!last" [class.border-border]="!last">
+                <span>{{ item.action }}</span>
+                <span class="text-muted-foreground text-xs">{{ item.time }}</span>
+              </div>
             }
+          </div>
+        </div>
+
+        <div hlmCard>
+          <div hlmCardHeader>
+            <h3 hlmCardTitle>Quick Actions</h3>
+            <p hlmCardDescription>Common tasks at your fingertips</p>
+          </div>
+          <hr hlmSeparator />
+          <div hlmCardContent class="p-4">
+            <div class="grid grid-cols-2 gap-2">
+              @for (action of quickActions; track action) {
+                <button hlmBtn variant="outline" size="sm">{{ action }}</button>
+              }
+            </div>
           </div>
         </div>
       </div>
     </div>
   `,
-  styles: [`
-    .page { padding: 24px; }
-    .page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .stat-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 4px; }
-    .stat-value { font-size: 2rem; font-weight: 700; }
-    .stat-label { font-size: 0.875rem; color: #64748b; }
-    .stat-trend { font-size: 0.8rem; }
-    .stat-trend.up { color: #22c55e; }
-    .stat-trend.down { color: #ef4444; }
-    .page-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; }
-    .card h2 { font-size: 1.125rem; font-weight: 600; margin-bottom: 16px; }
-    .activity-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; }
-    .muted { color: #94a3b8; font-size: 0.875rem; }
-    .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .action-btn { padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: #f8fafc; cursor: pointer; font-size: 0.875rem; }
-    .action-btn:hover { background: #f1f5f9; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardHomeComponent {

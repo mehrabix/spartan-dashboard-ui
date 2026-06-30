@@ -1,84 +1,73 @@
-import { Component, ChangeDetectionStrategy, inject, Type } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, ChangeDetectionStrategy, inject, OnInit } from '@angular/core';
+import { RouterModule, RouterOutlet } from '@angular/router';
+import { HlmButton } from '@spartan-ng/helm/button';
 import { TabBarComponent } from './tab-bar/tab-bar.component';
 import { TabService } from './services/tab.service';
-import {
-  DashboardHomeComponent,
-  UsersComponent,
-  AnalyticsComponent,
-  SettingsComponent,
-  ReportsComponent,
-  ProductsComponent,
-} from './pages';
+import { ThemeService } from './services/theme.service';
 
 interface NavItem {
   id: string;
   label: string;
   icon: string;
-  component: Type<unknown>;
 }
 
 @Component({
-  imports: [RouterModule, TabBarComponent],
+  imports: [RouterModule, RouterOutlet, TabBarComponent, HlmButton],
   selector: 'app-dashboard',
   template: `
-    <div class="dashboard-layout">
-      <aside class="sidebar">
-        <div class="sidebar-header">
-          <h2>Spartan Dashboard</h2>
+    <div class="flex h-screen">
+      <aside class="flex w-60 flex-col shrink-0 bg-sidebar border-r border-sidebar-border">
+        <div class="px-4 py-5 flex items-center justify-between">
+          <h2 class="text-sm font-semibold tracking-tight text-sidebar-foreground">Spartan Dashboard</h2>
+          <button hlmBtn variant="ghost" size="sm" class="w-7 h-7 p-0 text-sidebar-foreground" (click)="themeService.toggle()" [attr.aria-label]="'Switch to ' + (themeService.isDark() ? 'light' : 'dark') + ' mode'">
+            {{ themeService.isDark() ? '☀️' : '🌙' }}
+          </button>
         </div>
-        <nav class="sidebar-nav">
+        <hr hlmSeparator />
+        <nav class="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
           @for (item of navItems; track item.id) {
-            <button class="nav-item" (click)="openTab(item)">
-              <span class="nav-icon">{{ item.icon }}</span>
-              <span class="nav-label">{{ item.label }}</span>
+            <button
+              hlmBtn
+              variant="ghost"
+              size="sm"
+              class="w-full justify-start gap-3 px-3 py-2 text-sm font-normal"
+              [class.bg-accent]="item.id === tabService.activeTabId()"
+              [class.text-accent-foreground]="item.id === tabService.activeTabId()"
+              (click)="tabService.addTab(item.id)"
+            >
+              <span class="text-base w-5 text-center shrink-0">{{ item.icon }}</span>
+              <span>{{ item.label }}</span>
             </button>
           }
         </nav>
-        <div class="sidebar-footer">
-          <span class="version">v1.0.0</span>
+        <div class="px-4 py-3 border-t border-sidebar-border">
+          <span class="text-xs text-sidebar-foreground/60">v1.0.0</span>
         </div>
       </aside>
-      <main class="main-content">
+      <div class="flex-1 flex flex-col overflow-hidden">
         <app-tab-bar />
-      </main>
+        <div class="flex-1 overflow-y-auto bg-muted/30">
+          <router-outlet />
+        </div>
+      </div>
     </div>
   `,
-  styles: [`
-    :host { display: block; height: 100vh; }
-    .dashboard-layout { display: flex; height: 100%; }
-    .sidebar { width: 240px; background: #0f172a; color: #fff; display: flex; flex-direction: column; flex-shrink: 0; }
-    .sidebar-header { padding: 20px 16px; border-bottom: 1px solid #1e293b; }
-    .sidebar-header h2 { font-size: 1rem; font-weight: 700; margin: 0; }
-    .sidebar-nav { flex: 1; padding: 8px; overflow-y: auto; }
-    .nav-item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: none; background: none; color: #94a3b8; cursor: pointer; border-radius: 6px; font-size: 0.875rem; text-align: left; transition: all 0.15s; }
-    .nav-item:hover { background: #1e293b; color: #fff; }
-    .nav-icon { font-size: 1rem; width: 20px; text-align: center; }
-    .nav-label { font-weight: 500; }
-    .sidebar-footer { padding: 12px 16px; border-top: 1px solid #1e293b; }
-    .version { font-size: 0.75rem; color: #475569; }
-    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent {
-  private readonly tabService = inject(TabService);
+export class DashboardComponent implements OnInit {
+  protected readonly tabService = inject(TabService);
+  protected readonly themeService = inject(ThemeService);
 
   readonly navItems: NavItem[] = [
-    { id: 'dashboard', label: 'Dashboard', icon: '📊', component: DashboardHomeComponent },
-    { id: 'users', label: 'Users', icon: '👥', component: UsersComponent },
-    { id: 'analytics', label: 'Analytics', icon: '📈', component: AnalyticsComponent },
-    { id: 'products', label: 'Products', icon: '📦', component: ProductsComponent },
-    { id: 'reports', label: 'Reports', icon: '📄', component: ReportsComponent },
-    { id: 'settings', label: 'Settings', icon: '⚙️', component: SettingsComponent },
+    { id: 'home', label: 'Dashboard', icon: '📊' },
+    { id: 'users', label: 'Users', icon: '👥' },
+    { id: 'analytics', label: 'Analytics', icon: '📈' },
+    { id: 'products', label: 'Products', icon: '📦' },
+    { id: 'reports', label: 'Reports', icon: '📄' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' },
   ];
 
-  protected openTab(item: NavItem): void {
-    this.tabService.addTab({
-      id: item.id,
-      label: item.label,
-      icon: item.icon,
-      component: item.component,
-    });
+  ngOnInit(): void {
+    this.tabService.initFromUrl();
   }
 }

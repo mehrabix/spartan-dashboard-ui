@@ -1,4 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { HlmCard, HlmCardContent } from '@spartan-ng/helm/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmTableImports } from '@spartan-ng/helm/table';
 
 interface Product {
   name: string;
@@ -9,49 +13,48 @@ interface Product {
 
 @Component({
   selector: 'app-products',
+  imports: [HlmCard, HlmCardContent, HlmButton, HlmBadge, ...HlmTableImports],
   template: `
-    <div class="page">
-      <div class="page-header">
-        <h1 class="page-title">Products</h1>
-        <button class="btn-primary">Add Product</button>
+    <div class="p-6 space-y-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold tracking-tight">Products</h1>
+        <button hlmBtn size="sm">Add Product</button>
       </div>
-      <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Category</th>
-              <th>Price</th>
-              <th>Stock</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (product of products; track product.name) {
-              <tr>
-                <td>{{ product.name }}</td>
-                <td><span class="badge">{{ product.category }}</span></td>
-                <td>\${{ product.price.toFixed(2) }}</td>
-                <td><span class="stock" [class.low]="product.stock < 20">{{ product.stock }}</span></td>
-              </tr>
-            }
-          </tbody>
-        </table>
+
+      <div hlmCard>
+        <div hlmCardContent class="p-0">
+          <div hlmTableContainer>
+            <table hlmTable>
+              <thead hlmTHead>
+                <tr hlmTr>
+                  <th hlmTh>Product</th>
+                  <th hlmTh>Category</th>
+                  <th hlmTh>Price</th>
+                  <th hlmTh>Stock</th>
+                </tr>
+              </thead>
+              <tbody hlmTBody>
+                @for (product of products; track product.name) {
+                  <tr hlmTr>
+                    <td hlmTd class="font-medium">{{ product.name }}</td>
+                    <td hlmTd>
+                      <span hlmBadge variant="secondary" class="text-xs">{{ product.category }}</span>
+                    </td>
+                    <td hlmTd>\${{ product.price.toFixed(2) }}</td>
+                    <td hlmTd>
+                      <span [class.text-red-600]="product.stock < 20" [class.text-green-600]="product.stock >= 20" class="font-medium">
+                        {{ product.stock }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   `,
-  styles: [`
-    .page { padding: 24px; }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .page-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
-    .btn-primary { padding: 8px 16px; background: #0f172a; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th { text-align: left; padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; }
-    .badge { padding: 2px 8px; border-radius: 4px; background: #e2e8f0; font-size: 0.8rem; }
-    .stock { font-weight: 600; color: #16a34a; }
-    .stock.low { color: #dc2626; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsComponent {

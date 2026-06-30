@@ -1,49 +1,51 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { HlmCard, HlmCardContent } from '@spartan-ng/helm/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmTableImports } from '@spartan-ng/helm/table';
 
 @Component({
   selector: 'app-reports',
+  imports: [HlmCard, HlmCardContent, HlmButton, HlmBadge, ...HlmTableImports],
   template: `
-    <div class="page">
-      <div class="page-header">
-        <h1 class="page-title">Reports</h1>
-        <button class="btn-primary">Generate Report</button>
+    <div class="p-6 space-y-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold tracking-tight">Reports</h1>
+        <button hlmBtn size="sm">Generate Report</button>
       </div>
-      <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Report</th>
-              <th>Period</th>
-              <th>Status</th>
-              <th>Generated</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (report of reports; track report.name) {
-              <tr>
-                <td>{{ report.name }}</td>
-                <td>{{ report.period }}</td>
-                <td><span class="status" [class.completed]="report.status === 'Completed'">{{ report.status }}</span></td>
-                <td>{{ report.generated }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+
+      <div hlmCard>
+        <div hlmCardContent class="p-0">
+          <div hlmTableContainer>
+            <table hlmTable>
+              <thead hlmTHead>
+                <tr hlmTr>
+                  <th hlmTh>Report</th>
+                  <th hlmTh>Period</th>
+                  <th hlmTh>Status</th>
+                  <th hlmTh>Generated</th>
+                </tr>
+              </thead>
+              <tbody hlmTBody>
+                @for (report of reports; track report.name) {
+                  <tr hlmTr>
+                    <td hlmTd class="font-medium">{{ report.name }}</td>
+                    <td hlmTd class="text-muted-foreground">{{ report.period }}</td>
+                    <td hlmTd>
+                      <span hlmBadge [variant]="report.status === 'Completed' ? 'default' : 'secondary'" class="text-xs">
+                        {{ report.status }}
+                      </span>
+                    </td>
+                    <td hlmTd class="text-muted-foreground">{{ report.generated }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   `,
-  styles: [`
-    .page { padding: 24px; }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .page-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
-    .btn-primary { padding: 8px 16px; background: #0f172a; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th { text-align: left; padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; }
-    .status { padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; background: #fef2f2; color: #dc2626; }
-    .status.completed { background: #f0fdf4; color: #16a34a; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportsComponent {

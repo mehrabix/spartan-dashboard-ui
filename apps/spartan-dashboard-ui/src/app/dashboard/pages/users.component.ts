@@ -1,4 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { HlmCard, HlmCardContent } from '@spartan-ng/helm/card';
+import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmBadge } from '@spartan-ng/helm/badge';
+import { HlmTableImports } from '@spartan-ng/helm/table';
 
 interface User {
   name: string;
@@ -9,49 +13,48 @@ interface User {
 
 @Component({
   selector: 'app-users',
+  imports: [HlmCard, HlmCardContent, HlmButton, HlmBadge, ...HlmTableImports],
   template: `
-    <div class="page">
-      <div class="page-header">
-        <h1 class="page-title">Users</h1>
-        <button class="btn-primary">Add User</button>
+    <div class="p-6 space-y-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold tracking-tight">Users</h1>
+        <button hlmBtn size="sm">Add User</button>
       </div>
-      <div class="card">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Role</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (user of users; track user.email) {
-              <tr>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td><span class="badge">{{ user.role }}</span></td>
-                <td><span class="status" [class.active]="user.status === 'Active'">{{ user.status }}</span></td>
-              </tr>
-            }
-          </tbody>
-        </table>
+
+      <div hlmCard>
+        <div hlmCardContent class="p-0">
+          <div hlmTableContainer>
+            <table hlmTable>
+              <thead hlmTHead>
+                <tr hlmTr>
+                  <th hlmTh>Name</th>
+                  <th hlmTh>Email</th>
+                  <th hlmTh>Role</th>
+                  <th hlmTh>Status</th>
+                </tr>
+              </thead>
+              <tbody hlmTBody>
+                @for (user of users; track user.email) {
+                  <tr hlmTr>
+                    <td hlmTd class="font-medium">{{ user.name }}</td>
+                    <td hlmTd class="text-muted-foreground">{{ user.email }}</td>
+                    <td hlmTd>
+                      <span hlmBadge variant="secondary" class="text-xs">{{ user.role }}</span>
+                    </td>
+                    <td hlmTd>
+                      <span hlmBadge [variant]="user.status === 'Active' ? 'default' : 'outline'" class="text-xs">
+                        {{ user.status }}
+                      </span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   `,
-  styles: [`
-    .page { padding: 24px; }
-    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .page-title { font-size: 1.5rem; font-weight: 700; margin: 0; }
-    .btn-primary { padding: 8px 16px; background: #0f172a; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; }
-    .table { width: 100%; border-collapse: collapse; }
-    .table th { text-align: left; padding: 12px 16px; font-size: 0.8rem; font-weight: 600; color: #64748b; text-transform: uppercase; background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
-    .table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; }
-    .badge { padding: 2px 8px; border-radius: 4px; background: #e2e8f0; font-size: 0.8rem; }
-    .status { padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; background: #fef2f2; color: #dc2626; }
-    .status.active { background: #f0fdf4; color: #16a34a; }
-  `],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersComponent {
