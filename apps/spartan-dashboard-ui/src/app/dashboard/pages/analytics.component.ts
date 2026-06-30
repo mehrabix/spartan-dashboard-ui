@@ -6,8 +6,8 @@ import { HlmSeparator } from '@spartan-ng/helm/separator';
   selector: 'app-analytics',
   imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmSeparator],
   template: `
-    <div class="p-6 space-y-6">
-      <h1 class="text-2xl font-bold tracking-tight">Analytics</h1>
+    <div class="p-4 md:p-6 space-y-6">
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight">Analytics</h1>
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         @for (m of metrics; track m.label) {

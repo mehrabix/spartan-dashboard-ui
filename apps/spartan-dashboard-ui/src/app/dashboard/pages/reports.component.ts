@@ -8,14 +8,14 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
   selector: 'app-reports',
   imports: [HlmCard, HlmCardContent, HlmButton, HlmBadge, ...HlmTableImports],
   template: `
-    <div class="p-6 space-y-6">
+    <div class="p-4 md:p-6 space-y-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold tracking-tight">Reports</h1>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">Reports</h1>
         <button hlmBtn size="sm">Generate Report</button>
       </div>
 
-      <div hlmCard>
-        <div hlmCardContent class="p-0">
+      <div hlmCard class="overflow-hidden">
+        <div hlmCardContent class="p-0 overflow-x-auto">
           <div hlmTableContainer>
             <table hlmTable>
               <thead hlmTHead>
@@ -29,14 +29,14 @@ import { HlmTableImports } from '@spartan-ng/helm/table';
               <tbody hlmTBody>
                 @for (report of reports; track report.name) {
                   <tr hlmTr>
-                    <td hlmTd class="font-medium">{{ report.name }}</td>
-                    <td hlmTd class="text-muted-foreground">{{ report.period }}</td>
+                    <td hlmTd class="font-medium whitespace-nowrap">{{ report.name }}</td>
+                    <td hlmTd class="text-muted-foreground whitespace-nowrap">{{ report.period }}</td>
                     <td hlmTd>
-                      <span hlmBadge [variant]="report.status === 'Completed' ? 'default' : 'secondary'" class="text-xs">
+                      <span hlmBadge [variant]="report.status === 'Completed' ? 'default' : 'secondary'" class="text-xs whitespace-nowrap">
                         {{ report.status }}
                       </span>
                     </td>
-                    <td hlmTd class="text-muted-foreground">{{ report.generated }}</td>
+                    <td hlmTd class="text-muted-foreground whitespace-nowrap">{{ report.generated }}</td>
                   </tr>
                 }
               </tbody>

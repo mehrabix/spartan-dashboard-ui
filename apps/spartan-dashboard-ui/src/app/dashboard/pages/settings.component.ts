@@ -3,15 +3,16 @@ import { HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescriptio
 import { HlmLabel } from '@spartan-ng/helm/label';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmSwitch } from '@spartan-ng/helm/switch';
+import { HlmSeparator } from '@spartan-ng/helm/separator';
 import { BrnSwitch } from '@spartan-ng/brain/switch';
 import { ThemeService } from '../services/theme.service';
 
 @Component({
   selector: 'app-settings',
-  imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmLabel, HlmInput, HlmSwitch, BrnSwitch],
+  imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmLabel, HlmInput, HlmSwitch, HlmSeparator, BrnSwitch],
   template: `
-    <div class="p-6 space-y-6 max-w-2xl">
-      <h1 class="text-2xl font-bold tracking-tight">Settings</h1>
+    <div class="p-4 md:p-6 space-y-6 max-w-2xl">
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight">Settings</h1>
 
       <div hlmCard>
         <div hlmCardHeader>

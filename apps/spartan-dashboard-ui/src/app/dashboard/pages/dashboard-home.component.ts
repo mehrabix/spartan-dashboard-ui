@@ -7,8 +7,8 @@ import { HlmSeparator } from '@spartan-ng/helm/separator';
   selector: 'app-dashboard-home',
   imports: [HlmCard, HlmCardContent, HlmCardHeader, HlmCardTitle, HlmCardDescription, HlmButton, HlmSeparator],
   template: `
-    <div class="p-6 space-y-6">
-      <h1 class="text-2xl font-bold tracking-tight">Dashboard Overview</h1>
+    <div class="p-4 md:p-6 space-y-6">
+      <h1 class="text-xl md:text-2xl font-bold tracking-tight">Dashboard Overview</h1>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         @for (stat of stats; track stat.label) {

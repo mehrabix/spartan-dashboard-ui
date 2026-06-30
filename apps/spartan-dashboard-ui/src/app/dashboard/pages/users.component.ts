@@ -15,14 +15,14 @@ interface User {
   selector: 'app-users',
   imports: [HlmCard, HlmCardContent, HlmButton, HlmBadge, ...HlmTableImports],
   template: `
-    <div class="p-6 space-y-6">
+    <div class="p-4 md:p-6 space-y-6">
       <div class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold tracking-tight">Users</h1>
+        <h1 class="text-xl md:text-2xl font-bold tracking-tight">Users</h1>
         <button hlmBtn size="sm">Add User</button>
       </div>
 
-      <div hlmCard>
-        <div hlmCardContent class="p-0">
+      <div hlmCard class="overflow-hidden">
+        <div hlmCardContent class="p-0 overflow-x-auto">
           <div hlmTableContainer>
             <table hlmTable>
               <thead hlmTHead>
@@ -36,13 +36,13 @@ interface User {
               <tbody hlmTBody>
                 @for (user of users; track user.email) {
                   <tr hlmTr>
-                    <td hlmTd class="font-medium">{{ user.name }}</td>
-                    <td hlmTd class="text-muted-foreground">{{ user.email }}</td>
+                    <td hlmTd class="font-medium whitespace-nowrap">{{ user.name }}</td>
+                    <td hlmTd class="text-muted-foreground whitespace-nowrap">{{ user.email }}</td>
                     <td hlmTd>
-                      <span hlmBadge variant="secondary" class="text-xs">{{ user.role }}</span>
+                      <span hlmBadge variant="secondary" class="text-xs whitespace-nowrap">{{ user.role }}</span>
                     </td>
                     <td hlmTd>
-                      <span hlmBadge [variant]="user.status === 'Active' ? 'default' : 'outline'" class="text-xs">
+                      <span hlmBadge [variant]="user.status === 'Active' ? 'default' : 'destructive'" class="text-xs whitespace-nowrap">
                         {{ user.status }}
                       </span>
                     </td>
