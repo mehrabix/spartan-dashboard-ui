@@ -7,6 +7,11 @@ export const appRoutes: Route[] = [
     pathMatch: 'full',
   },
   {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
+  {
     path: '**',
     redirectTo: 'dashboard',
   },
