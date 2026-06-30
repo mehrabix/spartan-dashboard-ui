@@ -7,7 +7,7 @@ import { TabService } from '../services/tab.service';
   selector: 'app-tab-bar',
   imports: [CdkMenuModule, HlmTabs, HlmTabsPaginatedList, HlmTabsTrigger],
   template: `
-      <div hlmTabs [tab]="tabService.activeTabId()" (tabActivated)="tabService.setActiveTab($event)" class="px-1 py-1 bg-background border-b border-border">
+      <div hlmTabs [tab]="tabService.activeTabId()" (tabActivated)="tabService.setActiveTab($event)" class="px-1 py-1 bg-background border-b border-border" (mousedown)="preventPaginatorFocus($event)">
       <hlm-paginated-tabs-list>
         @for (tab of tabService.tabs(); track tab.id) {
           @let pinned = tabService.isPinned(tab.id);
@@ -74,4 +74,11 @@ import { TabService } from '../services/tab.service';
 export class TabBarComponent {
   protected readonly tabService = inject(TabService);
   protected contextMenuTabId: string | null = null;
+
+  protected preventPaginatorFocus(event: MouseEvent): void {
+    const button = (event.target as HTMLElement).closest('button[data-pagination]');
+    if (button) {
+      event.preventDefault();
+    }
+  }
 }
