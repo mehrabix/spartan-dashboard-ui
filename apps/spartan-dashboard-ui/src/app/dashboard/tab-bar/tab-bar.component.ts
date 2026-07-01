@@ -159,7 +159,7 @@ import { TabService, TAB_COLORS, type TabColor } from '../services/tab.service';
             <span>Duplicate Tab</span>
           </button>
         }
-        @if (contextMenuTabId && tabService.tabHistory()[contextMenuTabId]?.length > 1) {
+        @if (contextMenuTabId && (tabService.tabHistory()[contextMenuTabId]?.length ?? 0) > 1) {
           <button
             cdkMenuItem
             class="w-full flex items-center gap-2 px-2 py-1.5 hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer"
